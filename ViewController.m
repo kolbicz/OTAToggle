@@ -31,6 +31,7 @@
     [self.actionButton setTitle:@"Check OTA Status" forState:UIControlStateNormal];
     self.actionButton.backgroundColor=UIColor.systemBlueColor;
     [self.actionButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [self refresh];
 }
 - (void)setBusy:(BOOL)busy { self.actionButton.enabled = !busy; busy ? [self.spinner startAnimating] : [self.spinner stopAnimating]; }
 - (void)refresh {

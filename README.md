@@ -6,10 +6,10 @@ disable them together by updating:
 
 `/var/db/com.apple.xpc.launchd/disabled.plist`
 
-Nothing is read or changed automatically when the app opens. Press **Check OTA
-Status** to inspect the services, then use the displayed action to enable or
-disable all four. A reboot is required, and the app can reboot the device after
-applying a change.
+The app automatically reads and displays the current status when it opens. It
+never changes anything without confirmation. Use the displayed action to enable
+or disable all four services. A reboot is required, and the app can reboot the
+device after applying a change.
 
 ## Services
 
