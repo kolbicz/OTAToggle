@@ -1,6 +1,6 @@
 Package: cz.kolbi.otatoggle
 Name: OTA Toggle
-Version: 1.0.1
+Version: 1.0.2
 Architecture: iphoneos-arm64
 Depends: firmware (>= 15.0)
 Description: Enable or disable iOS OTA update daemons.

@@ -1,25 +1,18 @@
 #import <Foundation/Foundation.h>
 #import <sys/stat.h>
 #import <unistd.h>
-#ifdef OTATOGGLE_ROOTHIDE
-#import <roothide.h>
-#endif
 extern int reboot(int);
 #ifndef RB_AUTOBOOT
 #define RB_AUTOBOOT 0
 #endif
 
 static NSString *PlistPath(void) {
-#ifdef OTATOGGLE_ROOTHIDE
-    return rootfs(@"/var/db/com.apple.xpc.launchd/disabled.plist");
-#else
     return @"/var/db/com.apple.xpc.launchd/disabled.plist";
-#endif
 }
 static NSArray<NSString *> *Keys(void) { return @[@"com.apple.mobile.softwareupdated",@"com.apple.OTATaskingAgent",@"com.apple.softwareupdateservicesd",@"com.apple.mobile.NRDUpdated"]; }
 static NSMutableDictionary *Load(NSError **error) {
     NSString *path=PlistPath(); NSData *data=[NSData dataWithContentsOfFile:path options:0 error:error];
-    if(!data) { if(error && (*error).code==NSFileReadNoSuchFileError){*error=nil;return NSMutableDictionary.dictionary;} return nil; }
+    if(!data) return nil;
     id obj=[NSPropertyListSerialization propertyListWithData:data options:NSPropertyListMutableContainersAndLeaves format:nil error:error];
     if(![obj isKindOfClass:NSDictionary.class]) { if(error)*error=[NSError errorWithDomain:@"OTAToggle" code:2 userInfo:@{NSLocalizedDescriptionKey:@"disabled.plist is not a dictionary."}]; return nil; }
     return [obj mutableCopy];
