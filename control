@@ -1,4 +1,4 @@
-Package: com.kolbicz.otatoggle
+Package: cz.kolbi.otatoggle
 Name: OTA Toggle
 Version: 1.0.0
 Architecture: iphoneos-arm64

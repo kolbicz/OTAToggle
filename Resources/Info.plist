@@ -3,7 +3,7 @@
 <plist version="1.0"><dict>
   <key>CFBundleDisplayName</key><string>OTA Toggle</string>
   <key>CFBundleExecutable</key><string>OTAToggle</string>
-  <key>CFBundleIdentifier</key><string>com.kolbicz.otatoggle</string>
+  <key>CFBundleIdentifier</key><string>cz.kolbi.otatoggle</string>
   <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
   <key>CFBundleName</key><string>OTA Toggle</string>
   <key>CFBundlePackageType</key><string>APPL</string>
