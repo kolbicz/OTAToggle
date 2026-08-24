@@ -27,6 +27,9 @@ are atomic and preserve the expected ownership and permissions.
 - Rootless jailbreaks (`iphoneos-arm64` package)
 - Roothide jailbreaks (`iphoneos-arm64e` package)
 
+The roothide build uses the official `rootfs()` path conversion API to access
+the original iOS filesystem from the randomized jailbreak bootstrap.
+
 This is a jailbreak package, not a normal sideloadable App Store application.
 
 ## Building

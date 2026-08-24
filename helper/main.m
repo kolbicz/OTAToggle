@@ -1,15 +1,24 @@
 #import <Foundation/Foundation.h>
 #import <sys/stat.h>
 #import <unistd.h>
+#ifdef OTATOGGLE_ROOTHIDE
+#import <roothide.h>
+#endif
 extern int reboot(int);
 #ifndef RB_AUTOBOOT
 #define RB_AUTOBOOT 0
 #endif
 
-static NSString *const Path = @"/var/db/com.apple.xpc.launchd/disabled.plist";
+static NSString *PlistPath(void) {
+#ifdef OTATOGGLE_ROOTHIDE
+    return rootfs(@"/var/db/com.apple.xpc.launchd/disabled.plist");
+#else
+    return @"/var/db/com.apple.xpc.launchd/disabled.plist";
+#endif
+}
 static NSArray<NSString *> *Keys(void) { return @[@"com.apple.mobile.softwareupdated",@"com.apple.OTATaskingAgent",@"com.apple.softwareupdateservicesd",@"com.apple.mobile.NRDUpdated"]; }
 static NSMutableDictionary *Load(NSError **error) {
-    NSData *data=[NSData dataWithContentsOfFile:Path options:0 error:error];
+    NSString *path=PlistPath(); NSData *data=[NSData dataWithContentsOfFile:path options:0 error:error];
     if(!data) { if(error && (*error).code==NSFileReadNoSuchFileError){*error=nil;return NSMutableDictionary.dictionary;} return nil; }
     id obj=[NSPropertyListSerialization propertyListWithData:data options:NSPropertyListMutableContainersAndLeaves format:nil error:error];
     if(![obj isKindOfClass:NSDictionary.class]) { if(error)*error=[NSError errorWithDomain:@"OTAToggle" code:2 userInfo:@{NSLocalizedDescriptionKey:@"disabled.plist is not a dictionary."}]; return nil; }
@@ -17,10 +26,10 @@ static NSMutableDictionary *Load(NSError **error) {
 }
 static BOOL Save(NSDictionary *plist,NSError **error) {
     NSData *data=[NSPropertyListSerialization dataWithPropertyList:plist format:NSPropertyListBinaryFormat_v1_0 options:0 error:error]; if(!data)return NO;
-    NSString *temp=[Path stringByAppendingFormat:@".otatoggle.%d",getpid()];
+    NSString *path=PlistPath(); NSString *temp=[path stringByAppendingFormat:@".otatoggle.%d",getpid()];
     if(![data writeToFile:temp options:NSDataWritingAtomic error:error])return NO;
     chmod(temp.fileSystemRepresentation,0644); chown(temp.fileSystemRepresentation,0,0);
-    if(rename(temp.fileSystemRepresentation,Path.fileSystemRepresentation)!=0){ int e=errno; unlink(temp.fileSystemRepresentation); if(error)*error=[NSError errorWithDomain:NSPOSIXErrorDomain code:e userInfo:nil]; return NO; }
+    if(rename(temp.fileSystemRepresentation,path.fileSystemRepresentation)!=0){ int e=errno; unlink(temp.fileSystemRepresentation); if(error)*error=[NSError errorWithDomain:NSPOSIXErrorDomain code:e userInfo:nil]; return NO; }
     return YES;
 }
 int main(int argc,char **argv){ @autoreleasepool {
