@@ -1,0 +1,5 @@
+.theos/
+build/
+packages/
+/OTAToggle/
+.DS_Store
